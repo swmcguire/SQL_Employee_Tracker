@@ -1,0 +1,24 @@
+{
+  "name": "sql_employee_tracker",
+  "version": "1.0.0",
+  "description": "As a business owner I want to be able to view and manage my departments, roles, and employees in my company so that I can run my business efficiently.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/swmcguire/SQL_Employee_Tracker.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "inquirer": "^8.2.4",
+    "mysql2": "^2.2.5"
+  },
+  "bugs": {
+    "url": "https://github.com/swmcguire/SQL_Employee_Tracker/issues"
+  },
+  "homepage": "https://github.com/swmcguire/SQL_Employee_Tracker#readme"
+}
