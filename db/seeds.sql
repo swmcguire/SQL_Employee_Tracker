@@ -1,15 +1,9 @@
 use cms_db;
 
-
-------------Add Starting Data to Dept table
-
-INSERT INTO department (name)
+INSERT INTO department(name)
 Values('IT'),
 ('Accounting'),
 ('Marketing');
-
-
-------------Add Starting Data to Role table
 
 insert into role (title, salary, department_id)
 values ('Director', 125000, 1),
@@ -21,9 +15,6 @@ values ('Director', 125000, 1),
 ('Analyst',90000,2),
 ('Lead Generation', 100000,3),
 ('Product owner',75000,3);
-
-
-------------Add Starting Data to Employee
 
 insert into employee (first_name, last_name, role_id,manager_id)
 values ('Sean', 'McGuire',1,Null), 

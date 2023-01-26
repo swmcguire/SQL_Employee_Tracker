@@ -202,21 +202,21 @@ inquirer.prompt(action).then((answers) => {
 
 //--------VIEW ALL DEPTS
 function viewDept() {
-    db.query('select * from department ORDER by id;', function (err, results) {
+    db.query(`select id as 'Department ID', name as 'Department Name' from department ORDER by id;`, function (err, results) {
         console.table(results);
     });
 };
 
 //--------VIEW ALL ROLES
 function viewRoles() {
-    db.query('SELECT r.id, r.title, d.name, r.salary FROM role r INNER JOIN department d on r.department_id = d.id ORDER by r.id;', function (err, results) {
+    db.query(`SELECT r.id as 'Role Id' , r.title as 'Job Title', d.name as Department, r.salary as Salary FROM role r INNER JOIN department d on r.department_id = d.id ORDER by r.id;`, function (err, results) {
         console.table(results);
     });
 };
 
 //--------VIEW ALL EMPLOYEES
 function viewEmps() {
-    db.query('select e.id, e.first_name, e.last_name, r.title, d.name as department, r.salary, CONCAT(e2.first_name, " ", e2.last_name) as manager FROM department d INNER JOIN role r on d.id = r.department_id INNER JOIN employee e on e.role_id = r.id LEFT JOIN employee e2 on e2.id = e.manager_id ORDER by e.id ;', function (err, results) {
+    db.query(`select e.id as 'Employee Id', e.first_name as 'First Name', e.last_name as 'Last Name', r.title as 'Job Title', d.name as Department, r.salary as Salary, CONCAT(e2.first_name, " ", e2.last_name) as Manager FROM department d INNER JOIN role r on d.id = r.department_id INNER JOIN employee e on e.role_id = r.id LEFT JOIN employee e2 on e2.id = e.manager_id ORDER by e.id ;`, function (err, results) {
         console.table(results);
     });
 };
@@ -240,7 +240,7 @@ const addRole = ({ newTitle, newSalary, newDeptId }) => {
 };
 
 //--------ADD EMPLOYEE 
-const addEmp = ({newFirst, newLast, newRoleId, newManagerId}) => {
+const addEmp = ({ newFirst, newLast, newRoleId, newManagerId }) => {
     db.query(`INSERT INTO employee(first_name, last_name, role_id,manager_id) VALUES('${newFirst}','${newLast}',${newRoleId},${newManagerId});`, function (err, results) {
         console.table(`Employee Added`);
     });
@@ -248,7 +248,7 @@ const addEmp = ({newFirst, newLast, newRoleId, newManagerId}) => {
 
 //--------UPDATE EMPLOYEE 
 
-const updateEmp = ({userUpdate, updateFirst, updateLast, updateRoleId, updateManagerId}) => {
+const updateEmp = ({ userUpdate, updateFirst, updateLast, updateRoleId, updateManagerId }) => {
     db.query(`UPDATE employee SET first_name='${updateFirst}', last_name='${updateLast}', role_id=${updateRoleId}, manager_id=${updateManagerId}  WHERE id =${userUpdate});`, function (err, results) {
         console.table(`Employee Updated`);
     });
