@@ -29,6 +29,7 @@ const action = [
             'Update an employee role'
         ]
     },
+    //-------------------------------Add Department Prompt
     {
         type: "input",
         name: "newDept",
@@ -39,10 +40,11 @@ const action = [
             };
         },
     },
-  /*  {
+    //-------------------------------Add Role Prompt
+    {
         type: "input",
         name: "newTitle",
-        message: "What is the new department?",
+        message: "What is the new title?",
         when: (answers) => {
             if (answers.action === 'Add a role') {
                 return true;
@@ -51,19 +53,123 @@ const action = [
     },
     {
         type: "input",
-        name: "newDept",
-        message: "What is the new department?",
+        name: "newSalary",
+        message: "What is the new salary?",
         when: (answers) => {
             if (answers.action === 'Add a role') {
                 return true;
             };
         },
-    },*/
+    },
+    {
+        type: "input",
+        name: "newDeptId",
+        message: "What department is this role in?",
+        when: (answers) => {
+            if (answers.action === 'Add a role') {
+                return true;
+            };
+        },
+    },
+    //-------------------------------Add Employee Prompt
+    {
+        type: "input",
+        name: "newFirst",
+        message: "What is the new employee's first name?",
+        when: (answers) => {
+            if (answers.action === 'Add an employee') {
+                return true;
+            };
+        },
+    },
+    {
+        type: "input",
+        name: "newLast",
+        message: "What is the new employee's last name?",
+        when: (answers) => {
+            if (answers.action === 'Add an employee') {
+                return true;
+            };
+        },
+    },
+    {
+        type: "input",
+        name: "newRoleId",
+        message: "What is the new employee's role id?",
+        when: (answers) => {
+            if (answers.action === 'Add an employee') {
+                return true;
+            };
+        },
+    },
+    {
+        type: "input",
+        name: "newManagerId",
+        message: "What is the new employee's manager id?",
+        when: (answers) => {
+            if (answers.action === 'Add an employee') {
+                return true;
+            };
+        },
+    },
+    //-------------------------------Update Employee Prompt
+    {
+        type: "input",
+        name: "userUpdate",
+        message: "Which user do you want to update? Pick an id number",
+        when: (answers) => {
+            if (answers.action === 'Update an employee role') {
+                return true;
+            };
+        },
+    },
+    {
+        type: "input",
+        name: "updateFirst",
+        message: "What is the user's new first name?",
+        when: (answers) => {
+            if (answers.action === 'Update an employee role') {
+                return true;
+            };
+        },
+    },
+    {
+        type: "input",
+        name: "updateLast",
+        message: "What is the user's new last name?",
+        when: (answers) => {
+            if (answers.action === 'Update an employee role') {
+                return true;
+            };
+        },
+    },
+    {
+        type: "input",
+        name: "updateRoleId",
+        message: "What is the user's new role id?",
+        when: (answers) => {
+            if (answers.action === 'Update an employee role') {
+                return true;
+            };
+        },
+    },
+    {
+        type: "input",
+        name: "updateManagerId",
+        message: "What is the user's new Manager id?",
+        when: (answers) => {
+            if (answers.action === 'Update an employee role') {
+                return true;
+            };
+        },
+    },
+
 ];
 
+//-------- CASE WHEN TO TELL THE PROGRAM WHICH FUNCTION TO RUN ------//
 
 inquirer.prompt(action).then((answers) => {
-    console.log(answers.newDept);
+    //console.log(answers.newDept);
     switch (answers.action) {
         case 'View all departments':
             viewDept();
@@ -75,16 +181,16 @@ inquirer.prompt(action).then((answers) => {
             viewEmps();
             break;
         case 'Add a department':
-            addDept();
+            const addDeptCont = addDept(answers);
             break;
         case 'Add a role':
-            addRole();
+            const addRoleCont = addRole(answers);
             break;
         case 'Add an employee':
-            addEmp();
+            const addEmpCont = addEmp(answers);
             break;
         case 'Update an employee role':
-            updateEmp();
+            const updateEmpCont = updateEmp(answers);
             break;
         default:
             return `Please make a selection`;
@@ -96,21 +202,21 @@ inquirer.prompt(action).then((answers) => {
 
 //--------VIEW ALL DEPTS
 function viewDept() {
-    db.query('select * from department;', function (err, results) {
+    db.query('select * from department ORDER by id;', function (err, results) {
         console.table(results);
     });
 };
 
 //--------VIEW ALL ROLES
 function viewRoles() {
-    db.query('SELECT r.id, r.title, d.name, r.salary FROM role r INNER JOIN department d on r.department_id = d.id;', function (err, results) {
+    db.query('SELECT r.id, r.title, d.name, r.salary FROM role r INNER JOIN department d on r.department_id = d.id ORDER by r.id;', function (err, results) {
         console.table(results);
     });
 };
 
 //--------VIEW ALL EMPLOYEES
 function viewEmps() {
-    db.query('select e.id, e.first_name, e.last_name, r.title, d.name as department, r.salary, CONCAT(e2.first_name, " ", e2.last_name) as manager FROM department d INNER JOIN role r on d.id = r.department_id INNER JOIN employee e on e.role_id = r.id LEFT JOIN employee e2 on e2.id = e.manager_id ;', function (err, results) {
+    db.query('select e.id, e.first_name, e.last_name, r.title, d.name as department, r.salary, CONCAT(e2.first_name, " ", e2.last_name) as manager FROM department d INNER JOIN role r on d.id = r.department_id INNER JOIN employee e on e.role_id = r.id LEFT JOIN employee e2 on e2.id = e.manager_id ORDER by e.id ;', function (err, results) {
         console.table(results);
     });
 };
@@ -119,31 +225,31 @@ function viewEmps() {
 //---------- CREATE QUERIES TO UPDATE TABLES ----------//
 
 //--------ADD DEPARTMENT 
-function addDept(answers) {
-    db.query(`INSERT INTO department(name) VALUES(newDept);`, function (err, results) {
-        console.table(`${newDept} Added`);
+
+const addDept = ({ newDept }) => {
+    db.query(`INSERT INTO department(name) VALUES('${newDept}');`, function (err, results) {
+        console.table(`Department Added`);
     });
 };
 
 //--------ADD ROLE
-function addRole() {
-    db.query(`INSERT INTO role(title,salary,department_id) VALUES('a',1,2);`, function (err, results) {
+const addRole = ({ newTitle, newSalary, newDeptId }) => {
+    db.query(`INSERT INTO role(title,salary,department_id) VALUES('${newTitle}',${newSalary},${newDeptId});`, function (err, results) {
         console.table(`Roles Added`);
     });
 };
 
 //--------ADD EMPLOYEE 
-
-function addEmp() {
-    db.query(`INSERT INTO employee(first_name, last_name, role_id,manager_id) VALUES('a','b',2,1);`, function (err, results) {
+const addEmp = ({newFirst, newLast, newRoleId, newManagerId}) => {
+    db.query(`INSERT INTO employee(first_name, last_name, role_id,manager_id) VALUES('${newFirst}','${newLast}',${newRoleId},${newManagerId});`, function (err, results) {
         console.table(`Employee Added`);
     });
 };
 
 //--------UPDATE EMPLOYEE 
 
-function updateEmp() {
-    db.query(`UPDATE employee SET ____ =_____ WHERE id = ___);`, function (err, results) {
+const updateEmp = ({userUpdate, updateFirst, updateLast, updateRoleId, updateManagerId}) => {
+    db.query(`UPDATE employee SET first_name='${updateFirst}', last_name='${updateLast}', role_id=${updateRoleId}, manager_id=${updateManagerId}  WHERE id =${userUpdate});`, function (err, results) {
         console.table(`Employee Updated`);
     });
 };
