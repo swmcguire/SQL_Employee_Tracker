@@ -17,3 +17,32 @@ const db = mysql.createConnection(
 
     console.log(`Connected to the cms_db`)
 );
+
+//---------- CREATE COMMAND PROMPTS ----------//
+
+
+
+
+//---------- CREATE QUERIES TO RETURN DATA ----------//
+
+//--------VIEW ALL DEPTS
+
+//--------VIEW ALL ROLES
+
+//--------VIEW ALL EMPLOYEES
+//-----JOIN ALL TABLES TOGETHER
+
+
+//---------- CREATE QUERIES TO UPDATE TABLES ----------//
+
+//--------ADD DEPARTMENT 
+    //-----UPDATE TABLE DEPARTMENT
+
+
+//--------ADD ROLE
+    //-----UPDATE TABLE ROLES
+
+
+
+//--------ADD EMPLOYEE 
+    //-----UPDATE TABLE EMPLOYEE
