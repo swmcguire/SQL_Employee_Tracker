@@ -1,11 +1,6 @@
 const cTable = require('console.table');
 const inquirer = require('inquirer');
-const express = require('express');
 const mysql = require ('mysql2');
-
-const PORT = process.env.PORT || 3001;
-
-const app = express();
 
 const db = mysql.createConnection(
     {
@@ -19,31 +14,77 @@ const db = mysql.createConnection(
 );
 
 //---------- CREATE COMMAND PROMPTS ----------//
+const action = [
+{
+    type: "list",
+    name: "action",
+    message: "Please choose action below",
+    choices: [
+        'View all departments', 
+        'View all roles',
+        'View all employees',
+        'Add a department', 
+        'Add a role',
+        'Add an employee',
+        'Update an employee role'
+    ],
+},
+];
 
-'View all departments', 
-'View all roles',
-'View all employees',
-'Add a department', 
-'Add a role',
-'Add an employee',
-'Update an employee role'
-
-
+inquirer.prompt(action).then((answers) => {
+    console.log(answers.action);
+    switch (answers.action) {
+        case 'View all departments':
+            viewDept();
+            break;
+        case 'View all roles':
+            viewRoles();
+            break;
+        case 'View all employees':
+            viewEmps();
+            break;
+        case 'Add a department':
+            addDept();
+            break;
+        case'Add a role':
+            addRole();
+            break;
+        case'Add an employee':
+            addEmp();
+            break;
+        case'Update an employee role':
+            updateEmp();
+            break;
+        default:    
+            return `Please make a selection`;
+    } 
+}
+);
 
 //---------- CREATE QUERIES TO RETURN DATA ----------//
 
 //--------VIEW ALL DEPTS
-//----SELECT * FROM department
+function viewDept() {
+    db.query('select * from department;', function (err, results) {
+    console.table(results);
+});
+};
 
 //--------VIEW ALL ROLES
-//----SELECT r.id, r.title, d.name, r.salary FROM role r
-//    INNER JOIN department d on r.department_id = d.id
+function viewRoles() {
+    db.query('SELECT r.id, r.title, d.name, r.salary FROM role r INNER JOIN department d on r.department_id = d.id;', function (err, results) {
+        console.table(results);
+});
+};
+
 
 //--------VIEW ALL EMPLOYEES
-//-----SELECT e.id, e.first_name, e.last_name, r.title, d.name, r.salary,e.manager_id
-//       FROM employee e
-//     INNER JOIN role r on e.role_id = r.id
-//     INNER JOIN department d on d.id = r.department_id
+function viewEmps(){
+    db.query('select e.id, e.first_name, e.last_name, r.title, d.name as department, r.salary, CONCAT(e2.first_name, " ", e2.last_name) as manager FROM department d INNER JOIN role r on d.id = r.department_id INNER JOIN employee e on e.role_id = r.id LEFT JOIN employee e2 on e2.id = e.manager_id ;', function (err, results) {
+        console.table(results);
+});
+};
+
 
 
 //---------- CREATE QUERIES TO UPDATE TABLES ----------//
