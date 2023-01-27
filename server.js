@@ -26,7 +26,8 @@ const action = [
             'Add a department',
             'Add a role',
             'Add an employee',
-            'Update an employee role'
+            'Update an employee role',
+            'Quit'
         ]
     },
     //-------------------------------Add Department Prompt
@@ -168,6 +169,7 @@ const action = [
 
 //-------- CASE WHEN TO TELL THE PROGRAM WHICH FUNCTION TO RUN ------//
 
+const mainMenu = () => {
 inquirer.prompt(action).then((answers) => {
     //console.log(answers.newDept);
     switch (answers.action) {
@@ -193,17 +195,18 @@ inquirer.prompt(action).then((answers) => {
             const updateEmpCont = updateEmp(answers);
             break;
         default:
-            return `Please make a selection`;
+            quit();
     }
 }
 );
-
+};
 //---------- CREATE QUERIES TO RETURN DATA ----------//
 
 //--------VIEW ALL DEPTS
 function viewDept() {
     db.query(`select id as 'Department ID', name as 'Department Name' from department ORDER by id;`, function (err, results) {
         console.table(results);
+        mainMenu();
     });
 };
 
@@ -211,6 +214,7 @@ function viewDept() {
 function viewRoles() {
     db.query(`SELECT r.id as 'Role Id' , r.title as 'Job Title', d.name as Department, r.salary as Salary FROM role r INNER JOIN department d on r.department_id = d.id ORDER by r.id;`, function (err, results) {
         console.table(results);
+        mainMenu();
     });
 };
 
@@ -218,6 +222,7 @@ function viewRoles() {
 function viewEmps() {
     db.query(`select e.id as 'Employee Id', e.first_name as 'First Name', e.last_name as 'Last Name', r.title as 'Job Title', d.name as Department, r.salary as Salary, CONCAT(e2.first_name, " ", e2.last_name) as Manager FROM department d INNER JOIN role r on d.id = r.department_id INNER JOIN employee e on e.role_id = r.id LEFT JOIN employee e2 on e2.id = e.manager_id ORDER by e.id ;`, function (err, results) {
         console.table(results);
+        mainMenu();
     });
 };
 
@@ -229,6 +234,7 @@ function viewEmps() {
 const addDept = ({ newDept }) => {
     db.query(`INSERT INTO department(name) VALUES('${newDept}');`, function (err, results) {
         console.table(`Department Added`);
+        mainMenu();
     });
 };
 
@@ -236,14 +242,16 @@ const addDept = ({ newDept }) => {
 const addRole = ({ newTitle, newSalary, newDeptId }) => {
     db.query(`INSERT INTO role(title,salary,department_id) VALUES('${newTitle}',${newSalary},${newDeptId});`, function (err, results) {
         console.table(`Roles Added`);
-    });
+        mainMenu();
+    }); 
 };
 
 //--------ADD EMPLOYEE 
 const addEmp = ({ newFirst, newLast, newRoleId, newManagerId }) => {
     db.query(`INSERT INTO employee(first_name, last_name, role_id,manager_id) VALUES('${newFirst}','${newLast}',${newRoleId},${newManagerId});`, function (err, results) {
         console.table(`Employee Added`);
-    });
+        mainMenu();
+    }); 
 };
 
 //--------UPDATE EMPLOYEE 
@@ -251,5 +259,13 @@ const addEmp = ({ newFirst, newLast, newRoleId, newManagerId }) => {
 const updateEmp = ({ userUpdate, updateFirst, updateLast, updateRoleId, updateManagerId }) => {
     db.query(`UPDATE employee SET first_name='${updateFirst}', last_name='${updateLast}', role_id=${updateRoleId}, manager_id=${updateManagerId}  WHERE id =${userUpdate});`, function (err, results) {
         console.table(`Employee Updated`);
+        mainMenu();
     });
+    
 };
+
+function quit() {
+    process.exit();
+}
+
+mainMenu();
