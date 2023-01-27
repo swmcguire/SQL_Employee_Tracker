@@ -171,7 +171,6 @@ const action = [
 
 const mainMenu = () => {
 inquirer.prompt(action).then((answers) => {
-    //console.log(answers.newDept);
     switch (answers.action) {
         case 'View all departments':
             viewDept();
@@ -257,7 +256,7 @@ const addEmp = ({ newFirst, newLast, newRoleId, newManagerId }) => {
 //--------UPDATE EMPLOYEE 
 
 const updateEmp = ({ userUpdate, updateFirst, updateLast, updateRoleId, updateManagerId }) => {
-    db.query(`UPDATE employee SET first_name='${updateFirst}', last_name='${updateLast}', role_id=${updateRoleId}, manager_id=${updateManagerId}  WHERE id =${userUpdate});`, function (err, results) {
+    db.query(`UPDATE employee SET first_name='${updateFirst}', last_name='${updateLast}', role_id=${updateRoleId}, manager_id=${updateManagerId} WHERE id =${userUpdate};`, function (err, results) {
         console.table(`Employee Updated`);
         mainMenu();
     });

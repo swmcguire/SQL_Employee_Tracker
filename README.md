@@ -12,7 +12,7 @@ This was a great project, I had SQL knowledge going in but learning how to tie t
 
 The git hub code can be found here:  https://github.com/swmcguire/SQL_Employee_Tracker.git
 
-The video link can be found here: ![software demo video](./)
+The video link can be found here: ![software demo video](./Assets/SQL_Employee_Video.webm)
 
 In order to launch the program you'll have to navigate to the appropriate directory that houses the server.js file.
 
